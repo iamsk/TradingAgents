@@ -1,31 +1,30 @@
 import os
-from datetime import date
+from datetime import datetime
+from unittest.mock import MagicMock
 
-from tradingagents.default_config import DEFAULT_CONFIG
-from tradingagents.graph.trading_graph import TradingAgentsGraph
+import questionary
+from dotenv import load_dotenv
+
+from cli import main, utils
+
+load_dotenv()
 
 
 def run_one(ticker):
-    config = DEFAULT_CONFIG.copy()
-    config["llm_provider"] = "openai"  # Use a different model
-    config["backend_url"] = os.getenv('BACKEND_URL')
-    config["deep_think_llm"] = "o3-mini"  # Use a different model
-    config["quick_think_llm"] = "gpt-4.1-mini"  # Use a different model
-    config["max_debate_rounds"] = 1  # Increase debate rounds
-    config["online_tools"] = True  # Increase debate rounds
+    user_selections = {
+        "ticker": ticker,
+        "analysis_date": datetime.now().strftime("%Y-%m-%d"),
+        "analysts": [questionary.Choice(display, value=value) for display, value in utils.ANALYST_ORDER],
+        "research_depth": 5,
+        "llm_provider": "openai",
+        "backend_url": os.getenv('BACKEND_URL'),
+        "shallow_thinker": "gpt-4.1-mini",
+        "deep_thinker": "o4-mini",
+    }
+    # print(user_selections)
+    main.get_user_selections = MagicMock(return_value=user_selections)
+    main.run_analysis()
 
-    # Initialize with custom config
-    ta = TradingAgentsGraph(debug=True, config=config)
-
-    # forward propagate
-    today = date.today()
-    today_str = today.strftime('%Y-%m-%d')
-    _, decision = ta.propagate(ticker, today_str)
-    print(decision)
-
-
-# Memorize mistakes and reflect
-# ta.reflect_and_remember(1000) # parameter is the position returns
 
 def get_top_stocks():
     import requests
@@ -58,7 +57,17 @@ def get_top_stocks2():
 
 
 if __name__ == '__main__':
+    # run_one('ORCL')
+    # exit()
     # get_top_stocks()
-    stocks = ['NVDA', 'MSFT', 'AAPL', 'AMZN', 'GOOG', 'META', 'TSLA', 'WMT', 'ORCL', 'COIN', 'CRCL', 'HOOD']
+    stocks = ['NVDA', 'MSFT', 'AAPL', 'AMZN',
+              # 'GOOG',
+              'META',
+              # 'TSLA',
+              'WMT',
+              # 'ORCL',
+              'COIN',
+              'CRCL',
+              'HOOD']
     for stock in stocks:
         run_one(stock)

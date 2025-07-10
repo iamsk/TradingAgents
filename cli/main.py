@@ -99,7 +99,7 @@ class MessageBuffer:
             if content is not None:
                 latest_section = section
                 latest_content = content
-               
+
         if latest_section and latest_content:
             # Format the current section for display
             section_titles = {
@@ -313,7 +313,7 @@ def update_display(layout, spinner_text=None):
             content_str = ' '.join(text_parts)
         elif not isinstance(content_str, str):
             content_str = str(content)
-            
+
         # Truncate message content if too long
         if len(content_str) > 200:
             content_str = content_str[:197] + "..."
@@ -470,7 +470,7 @@ def get_user_selections():
         )
     )
     selected_llm_provider, backend_url = select_llm_provider()
-    
+
     # Step 6: Thinking agents
     console.print(
         create_question_box(
@@ -767,7 +767,7 @@ def run_analysis():
             with open(log_file, "a") as f:
                 f.write(f"{timestamp} [{message_type}] {content}\n")
         return wrapper
-    
+
     def save_tool_call_decorator(obj, func_name):
         func = getattr(obj, func_name)
         @wraps(func)
@@ -790,6 +790,9 @@ def run_analysis():
                     file_name = f"{section_name}.md"
                     with open(report_dir / file_name, "w") as f:
                         f.write(content)
+                        f.write('\n')
+                        content_cn = translate(content)
+                        f.write(content_cn)
         return wrapper
 
     message_buffer.add_message = save_message_decorator(message_buffer, "add_message")
@@ -857,7 +860,7 @@ def run_analysis():
                     msg_type = "System"
 
                 # Add message to buffer
-                message_buffer.add_message(msg_type, content)                
+                message_buffer.add_message(msg_type, content)
 
                 # If it's a tool call, add it to tool calls
                 if hasattr(last_message, "tool_calls"):
@@ -1101,5 +1104,20 @@ def analyze():
     run_analysis()
 
 
+def translate(content):
+    import openai
+    import os
+    client = openai.OpenAI(base_url=os.getenv('BACKEND_URL'))
+    prompt = f"Translate the following ENGLISH text into CHINESE: \"{content}\""
+    rsp = client.chat.completions.create(
+        model="gpt-4.1-mini",
+        messages=[{"role": "system", "content": "You are a professional translator."},
+                  {"role": "user", "content": prompt}],
+        temperature=0.2
+    )
+    return rsp.choices[0].message.content.strip()
+
+
 if __name__ == "__main__":
+    # print(translate('hi'))
     app()
