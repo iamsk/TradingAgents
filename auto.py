@@ -14,7 +14,7 @@ def run_one(ticker):
     user_selections = {
         "ticker": ticker,
         "analysis_date": datetime.now().strftime("%Y-%m-%d"),
-        "analysts": [questionary.Choice(display, value=value) for display, value in utils.ANALYST_ORDER],
+        "analysts": [questionary.Choice(display, value=value.value) for display, value in utils.ANALYST_ORDER],
         "research_depth": 5,
         "llm_provider": "openai",
         "backend_url": os.getenv('BACKEND_URL'),
