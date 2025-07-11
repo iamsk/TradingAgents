@@ -3,6 +3,7 @@ from datetime import datetime
 from unittest.mock import MagicMock
 
 import questionary
+import typer
 from dotenv import load_dotenv
 
 from cli import main, utils
@@ -57,8 +58,9 @@ def get_top_stocks2():
 
 
 if __name__ == '__main__':
+    typer.run(run_one)
     # run_one('ORCL')
-    # exit()
+    exit()
     # get_top_stocks()
     stocks = ['NVDA', 'MSFT', 'AAPL', 'AMZN',
               # 'GOOG',
