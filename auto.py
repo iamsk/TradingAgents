@@ -19,8 +19,8 @@ def run_one(ticker):
         "research_depth": 5,
         "llm_provider": "openai",
         "backend_url": os.getenv('BACKEND_URL'),
-        "shallow_thinker": "gpt-5",
-        "deep_thinker": "gpt-5",
+        "shallow_thinker": "gpt-5-mini",
+        "deep_thinker": "o4-mini-high",
     }
     # print(user_selections)
     main.get_user_selections = MagicMock(return_value=user_selections)
