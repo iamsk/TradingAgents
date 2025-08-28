@@ -8,7 +8,7 @@ table = client.private.tradingview.最活跃
 
 today = date.today()
 yesterday = today + timedelta(days=-1)
-yesterday_str = yesterday.strftime('%Y-%m-%d')
+yesterday_str = today.strftime('%Y-%m-%d')
 
 if __name__ == '__main__':
     records = table.find_one({'agg_date': yesterday_str})
