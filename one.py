@@ -2,20 +2,11 @@ import os
 from datetime import datetime
 from unittest.mock import MagicMock
 
-import pymongo
 import questionary
 import typer
-from dotenv import load_dotenv
 
 from cli import main, utils
-
-host = os.getenv('MONGODB_HOST')
-port = 3717
-client = pymongo.MongoClient(host, port)
-
-table = client.private.tradingagents.records
-
-load_dotenv()
+from mdb import table
 
 
 def run_one(ticker):

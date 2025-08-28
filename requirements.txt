@@ -24,4 +24,6 @@ rich
 questionary
 langchain_anthropic
 langchain-google-genai
-pymongo
+pymongo<4.0
+flask
+flask-cors
