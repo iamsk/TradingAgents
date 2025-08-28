@@ -25,5 +25,6 @@ questionary
 langchain_anthropic
 langchain-google-genai
 pymongo<4.0
+cryptography
 flask
 flask-cors
