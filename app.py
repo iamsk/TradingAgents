@@ -1,3 +1,6 @@
+import os
+
+import markdown
 from flask import Flask, render_template_string
 from flask_cors import CORS
 
@@ -50,9 +53,33 @@ def index():
     #             'date': '2025-08-27'}]
     reports = []
     for report in records:
-        url = f'https://ta.askpic.com/reports/{report["ticker"]}/{report["analysis_date"]}/reports/final_trade_decision.md'
+        url = f'https://ta.askpic.com/{report["ticker"]}/{report["analysis_date"]}'
         reports.append({"url": url, 'ticker': report['ticker'], 'analysis_date': report["analysis_date"]})
     return render_template_string(HTML_TEMPLATE, reports=reports)
+
+
+MARKDOWN_TPL = """
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Markdown Display</title>
+</head>
+<body>
+    {{ html_content | safe }}
+</body>
+</html>
+"""
+
+
+@app.route('/<ticker>/<date>')
+def md(ticker, date):
+    path = f'{os.getcwd()}/results/{ticker}/{date}/reports/final_trade_decision.md'
+    with open(path, 'r', encoding='utf-8') as f:
+        markdown_content = f.read()
+    html_content = markdown.markdown(markdown_content)
+    return render_template_string(MARKDOWN_TPL, html_content=html_content)
 
 
 if __name__ == '__main__':

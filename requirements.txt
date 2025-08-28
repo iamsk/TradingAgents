@@ -28,3 +28,4 @@ pymongo<4.0
 cryptography
 flask
 flask-cors
+Markdown
