@@ -1,5 +1,5 @@
 import os
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
 from unittest.mock import MagicMock
 
 import questionary
@@ -10,7 +10,8 @@ from mdb import table
 
 
 def run_one(ticker):
-    analysis_date = datetime.now().strftime("%Y-%m-%d")
+    beijing = timezone(timedelta(hours=8))
+    analysis_date = datetime.now(beijing).strftime("%Y-%m-%d")
     user_selections = {
         "ticker": ticker,
         "analysis_date": analysis_date,
