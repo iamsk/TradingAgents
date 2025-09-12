@@ -47,7 +47,7 @@ HTML_TEMPLATE = '''
 @app.route('/')
 def index():
     sort = [(u"analysis_date", -1), (u"ticker", 1)]
-    records = table.find({}, sort=sort)
+    records = table.find({}, sort=sort).limit(100)
     # print(len(reports))
     # reports = [{'url': 'https://reports.askpic.com/SBET/2025-08-27/reports/final_trade_decision.md', 'title': 'SBET',
     #             'date': '2025-08-27'}]
